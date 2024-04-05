@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatbot Interface</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+            font-size: 16px;
+        }
+        #chat-container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 30px;
+            background-color: #fff;
+            border-radius: 12px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        }
+        #chat-history {
+            margin-bottom: 30px;
+            overflow-y: auto;
+            max-height: 400px;
+            padding-right: 20px; /* Add space for scrollbar */
+        }
+        #input-text {
+            width: calc(100% - 120px);
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            margin-right: 15px;
+            font-size: 16px;
+        }
+        button {
+            padding: 15px 30px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px 1px 1px 1px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        div.chat-message {
+            margin-bottom: 20px;
+            padding: 15px;
+            border-radius: 8px;
+        }
+        div.user-message {
+            background-color: #007bff;
+            color: #fff;
+            align-self: flex-end;
+        }
+        div.bot-message {
+            background-color: #f0f0f0;
+            color: #333;
+            align-self: flex-start;
+        }
+    </style>
+</head>
+<body>
+    <div id="chat-container">
+        <div id="chat-history"></div>
+        <input type="text" id="input-text" placeholder="Type your message...">
+        <button onclick="sendMessage()">Send</button>
+    </div>
+
+    <script>
+        function sendMessage() {
+            var inputText = document.getElementById('input-text').value;
+            var chatHistory = document.getElementById('chat-history');
+            var userMessage = `<div class="chat-message user-message">${inputText}</div>`;
+            chatHistory.innerHTML += userMessage;
+
+            // Send input to server and get response
+            fetch('/chat', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: `input_text=${inputText}`
+            })
+            .then(response => response.json())
+            .then(data => {
+                var botMessage = `<div class="chat-message bot-message">${data.response}</div>`;
+                chatHistory.innerHTML += botMessage;
+                chatHistory.scrollTop = chatHistory.scrollHeight; // Scroll to bottom
+            });
+
+            // Clear input field after sending message
+            document.getElementById('input-text').value = '';
+        }
+    </script>
+</body>
+</html>
