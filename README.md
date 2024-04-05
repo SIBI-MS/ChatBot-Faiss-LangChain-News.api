@@ -4,7 +4,7 @@ This repository contains a simple chatbot interface built using  LangChain, News
 
 ## Preview
 
-![Chatbot Interface Preview](preview.png)
+![Chatbot Interface Preview](ChatBot.png)
 
 ## Usage
 
